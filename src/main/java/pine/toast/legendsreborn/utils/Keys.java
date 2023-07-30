@@ -30,6 +30,8 @@ public class Keys {
   public static final NamespacedKey BrokenWand = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "BrokenWand");
   public static final NamespacedKey Starfire = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "Starfire");
   public static final NamespacedKey WoH = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "Woh");
+  public static final NamespacedKey ToF = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "ToF");
+  public static final NamespacedKey AetherWalker = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "AetherWalker");
   public static final NamespacedKey embrace = new NamespacedKey(EternalRealms_LegendsReborn.getPlugin(), "embrace");
 
   // Auction House

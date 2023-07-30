@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -17,288 +16,73 @@ import pine.toast.legendsreborn.utils.EconomySystem.EconomyManager;
 import pine.toast.legendsreborn.utils.Keys;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class CategorieEvents implements Listener {
 
+  @SuppressWarnings("ConstantConditions")
   @EventHandler
-  public void onServerCategoryInventoryClick(InventoryClickEvent event) {
+  public void onCategoryInventoryClick(InventoryClickEvent event) {
     InventoryView invView = event.getView();
     Inventory clickedInventory = event.getClickedInventory();
+
     if (clickedInventory == null) {
       return;
     }
 
     String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.GOLD + "Server Category")) {
-      event.setCancelled(true);
+    String[] categories = {
+            ChatColor.GOLD + "Server Category",
+            ChatColor.BLUE + "Blocks Category",
+            ChatColor.AQUA + "Armor Category",
+            ChatColor.RED + "Weapons Category",
+            ChatColor.LIGHT_PURPLE + "Misc Category",
+            ChatColor.YELLOW + "Tools Category"
+    };
 
-      Player player = (Player) event.getWhoClicked();
+    for (String category : categories) {
+      if (inventoryTitle.equals(category)) {
+        event.setCancelled(true);
 
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
+        Player player = (Player) event.getWhoClicked();
 
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedItem == null) return;
+        ItemMeta itemMeta = clickedItem.getItemMeta();
 
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
+        PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
 
+        double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
+        String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
 
-      // TODO: Handle server category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        Player SellerUUID = Bukkit.getPlayer(seller);
-
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID.getUniqueId(), cost);
-
-        // Remove the item from the server category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "server", true);
-        if (removedItem.isPresent()) {
-          // Give the removed item back to the player
-          player.getInventory().addItem(removedItem.get());
-        }
+        handleCategoryInventoryClick(player, seller, cost, category, clickedItem);
+        break;
       }
     }
   }
 
-  @EventHandler
-  public void onBlocksCategoryInventoryClick(InventoryClickEvent event) {
-    InventoryView invView = event.getView();
-    Inventory clickedInventory = event.getClickedInventory();
-    if (clickedInventory == null) {
+  private void handleCategoryInventoryClick(Player player, String seller, double cost, String category, ItemStack clickedItem) {
+    if (player == null || category == null || clickedItem == null) return;
+
+    if (seller == null) {
+      player.sendMessage(ChatColor.DARK_RED + "Please contact a Dev, Something serious has gone wrong. ");
       return;
     }
 
-    String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.BLUE + "Blocks Category")) {
-      event.setCancelled(true);
+    Player sellerUUID = Bukkit.getPlayer(seller);
 
-      Player player = (Player) event.getWhoClicked();
+    double playerMoney = EconomyManager.getPlayerBalance(player.getUniqueId());
 
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
+    if (playerMoney < cost) {
+      player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
+    } else {
 
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
+      // Pay the seller the specified amount
+      EconomyManager.pay(player.getUniqueId(), sellerUUID.getUniqueId(), cost);
 
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
-
-      // TODO: Handle blocks category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        Player SellerUUID = Bukkit.getPlayer(seller);
-
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID.getUniqueId(), cost);
-
-        // Remove the item from the blocks category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "blocks", true);
-        if (removedItem.isPresent()) {
-          // Give the removed item back to the player
-          player.getInventory().addItem(removedItem.get());
-        }
-      }
-    }
-  }
-
-  @EventHandler
-  public void onArmorCategoryInventoryClick(InventoryClickEvent event) {
-    InventoryView invView = event.getView();
-    Inventory clickedInventory = event.getClickedInventory();
-    if (clickedInventory == null) {
-      return;
-    }
-
-    String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.AQUA + "Armor Category")) {
-      event.setCancelled(true);
-
-      Player player = (Player) event.getWhoClicked();
-
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
-
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
-
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
-
-      // TODO: Handle armor category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        Player SellerUUID = Bukkit.getPlayer(seller);
-
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID.getUniqueId(), cost);
-
-        // Remove the item from the armor category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "armor", true);
-        if (removedItem.isPresent()) {
-          // Give the removed item back to the player
-          player.getInventory().addItem(removedItem.get());
-        }
-      }
-    }
-  }
-
-  @EventHandler
-  public void onWeaponsCategoryInventoryClick(InventoryClickEvent event) {
-    InventoryView invView = event.getView();
-    Inventory clickedInventory = event.getClickedInventory();
-    if (clickedInventory == null) {
-      return;
-    }
-
-    String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.RED + "Weapons Category")) {
-      event.setCancelled(true);
-
-      Player player = (Player) event.getWhoClicked();
-
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
-
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
-
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
-
-      // TODO: Handle weapons category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        Player SellerUUID = Bukkit.getPlayer(seller);
-
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID.getUniqueId(), cost);
-
-        // Remove the item from the weapons category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "weapons", true);
-        // Give the removed item back to the player
-        removedItem.ifPresent(itemStack -> player.getInventory().addItem(itemStack));
-      }
-    }
-  }
-
-  @EventHandler
-  public void onMiscCategoryInventoryClick(InventoryClickEvent event) {
-    InventoryView invView = event.getView();
-    Inventory clickedInventory = event.getClickedInventory();
-    if (clickedInventory == null) {
-      return;
-    }
-
-    String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.LIGHT_PURPLE + "Misc Category")) {
-      event.setCancelled(true);
-
-      Player player = (Player) event.getWhoClicked();
-
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
-
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
-
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
-
-      // TODO: Handle misc category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        Player SellerUUID = Bukkit.getPlayer(seller);
-
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID.getUniqueId(), cost);
-
-        // Remove the item from the misc category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "misc", true);
-        if (removedItem.isPresent()) {
-          // Give the removed item back to the player
-          player.getInventory().addItem(removedItem.get());
-        }
-      }
-    }
-  }
-
-  @EventHandler
-  public void onToolsCategoryInventoryClick(InventoryClickEvent event) {
-    InventoryView invView = event.getView();
-    Inventory clickedInventory = event.getClickedInventory();
-    if (clickedInventory == null) {
-      return;
-    }
-
-    String inventoryTitle = invView.getTitle();
-    if (inventoryTitle.equals(ChatColor.YELLOW + "Tools Category")) {
-      event.setCancelled(true);
-
-      Player player = (Player) event.getWhoClicked();
-
-      ItemStack clickedItem = event.getCurrentItem();
-      if (clickedItem == null) return;
-      ItemMeta itemMeta = clickedItem.getItemMeta();
-
-      PersistentDataContainer itemData = itemMeta.getPersistentDataContainer();
-
-      double cost = itemData.get(Keys.cost, PersistentDataType.DOUBLE);
-      String seller = itemData.get(Keys.seller, PersistentDataType.STRING);
-
-      // TODO: Handle tools category inventory clicks
-      if (event.getClick() == ClickType.LEFT) {
-
-        if(seller == null) player.sendMessage(ChatColor.DARK_RED + "Please contact a Dev, Something serious has gone wrong. ");
-        UUID SellerUUID = Bukkit.getPlayer(seller).getUniqueId();
-        double money = EconomyManager.getPlayerBalance(player.getUniqueId());
-
-        if (money < cost) {
-          player.sendMessage(ChatColor.RED + "You do not have enough money to purchase this.");
-        } else return;
-
-        // Pay the seller the specified amount
-        EconomyManager.pay(player.getUniqueId(), SellerUUID, cost);
-
-        // Remove the item from the tools category inventory and optionally return it to the player
-        Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, "tools", true);
-        if (removedItem.isPresent()) {
-          // Give the removed item back to the player
-          player.getInventory().addItem(removedItem.get());
-        }
-      }
+      // Remove the item from the category inventory and optionally return it to the player
+      Optional<ItemStack> removedItem = AuctionHouseManager.removeItemFromCategory(clickedItem, category.toLowerCase(), true);
+      // Give the removed item back to the player
+      removedItem.ifPresent(itemStack -> player.getInventory().addItem(itemStack));
     }
   }
 

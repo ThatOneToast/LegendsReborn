@@ -1,4 +1,4 @@
-package pine.toast.legendsreborn.utils;
+package pine.toast.legendsreborn.utils.DamageManager;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;

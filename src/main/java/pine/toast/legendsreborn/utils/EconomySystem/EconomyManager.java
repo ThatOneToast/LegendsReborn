@@ -3,11 +3,14 @@ package pine.toast.legendsreborn.utils.EconomySystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static org.bukkit.Bukkit.getLogger;
 
 public class EconomyManager implements Serializable {
 
@@ -18,6 +21,47 @@ public class EconomyManager implements Serializable {
     playerBalances = new HashMap<>();
     balancesFile = file;
     loadBalancesFromFile();
+  }
+
+  public static void createBalancesFile(Plugin plugin) {
+    File balanceFile = new File(plugin.getDataFolder(), "balances.dat");
+
+    if (!balanceFile.exists()) {
+      try {
+        boolean balanceFileCreated = balanceFile.createNewFile();
+        if (balanceFileCreated) {
+          getLogger().info("balances.dat file created.");
+          // Perform additional actions for a successful file creation
+        } else {
+          getLogger().severe("Failed to create balances.dat file!");
+          // Perform additional actions for a failed file creation
+          // For example, attempt a recovery mechanism with retries
+          int maxRetries = 3;
+          int currentRetry = 0;
+          boolean success = false;
+          while (currentRetry < maxRetries && !success) {
+            try {
+              // Add a short delay before retrying
+              Thread.sleep(1000);
+              success = balanceFile.createNewFile();
+              currentRetry++;
+            } catch (InterruptedException | IOException e) {
+              getLogger().severe("Failed to create balances.dat file on retry " + currentRetry);
+              e.printStackTrace();
+            }
+          }
+          if (success) {
+            getLogger().info("balances.dat file created on retry " + currentRetry);
+          } else {
+            getLogger().severe("Failed to create balances.dat file after " + currentRetry + " retries!");
+            // Perform additional actions for a failed recovery
+          }
+        }
+      } catch (IOException e) {
+        getLogger().severe("Failed to create balances.dat file!");
+        e.printStackTrace();
+      }
+    }
   }
 
 
@@ -67,7 +111,7 @@ public class EconomyManager implements Serializable {
       playerBalances = (HashMap<UUID, Double>) inputStream.readObject();
     } catch (IOException | ClassNotFoundException e) {
       // Handle the exception appropriately (e.g., logging an error)
-      Bukkit.getLogger().warning("Failed to load player balances from file: " + balancesFile.getName());
+      getLogger().warning("Failed to load player balances from file: " + balancesFile.getName());
     }
   }
 
@@ -76,7 +120,7 @@ public class EconomyManager implements Serializable {
       outputStream.writeObject(playerBalances);
     } catch (IOException e) {
       // Handle the exception appropriately (e.g., logging an error)
-      Bukkit.getLogger().warning("Failed to save player balances to file: " + balancesFile.getName());
+      getLogger().warning("Failed to save player balances to file: " + balancesFile.getName());
     }
   }
 

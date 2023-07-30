@@ -2,6 +2,7 @@ package pine.toast.legendsreborn.utils.ItemManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class ItemManager {
 
-  public static ItemStack createCustomItem(Material material, String displayName, String[] lore, Map<Enchantment, Integer> enchantments, Boolean hideEnchats, int customModelData) {
+  public static ItemStack createCustomItem(Material material, String displayName, String[] lore, Map<Enchantment, Integer> enchantments, Boolean hideEnchats, int customModelData, NamespacedKey key) {
     ItemStack item = new ItemStack(material);
     ItemMeta meta = item.getItemMeta();
     meta.setDisplayName(displayName);
@@ -26,6 +27,9 @@ public class ItemManager {
     if (hideEnchats) {
       meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
     }
+
+    PersistentDataContainer data = meta.getPersistentDataContainer();
+    data.set(key, PersistentDataType.STRING, key.toString());
 
     if (lore != null && lore.length > 0) {
       List<String> formattedLore = new ArrayList<>(Arrays.asList(lore));

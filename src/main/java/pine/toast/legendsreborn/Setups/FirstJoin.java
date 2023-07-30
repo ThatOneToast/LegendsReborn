@@ -31,38 +31,25 @@ public class FirstJoin implements Listener {
 
       playerData.set(Keys.maxMana, PersistentDataType.DOUBLE, 100.0);
       playerData.set(Keys.manaPerSec, PersistentDataType.DOUBLE, 1.0);
-
       playerData.set(Keys.level, PersistentDataType.INTEGER, 0);
       playerData.set(Keys.experience, PersistentDataType.INTEGER, 0);
-
       playerData.set(Keys.showExp, PersistentDataType.BOOLEAN, true);
       playerData.set(Keys.isPaid, PersistentDataType.BOOLEAN, false);
 
       player.sendMessage(ChatColor.GRAY + "You can turn off the experience bar by typing " + ChatColor.GREEN + "/toggleexp");
-
       player.sendMessage(ChatColor.GRAY + "Welcome to Legends Reborn! Please select a class to begin your journey!");
-      player.sendMessage(ChatColor.GREEN + "There are 7 more locked classes you can Choose from. Check the discord!");
 
-      player.sendMessage(ChatColor.GRAY + "You can turn off the experience bar by typing " + ChatColor.GREEN + "/toggleexp");
-
-      player.sendMessage(ChatColor.GRAY + "Welcome to Legends Reborn! Please select a class to begin your journey!");
-      SelectClass.openClassSelectGUI(player);
 
       UUID playerUUID = player.getUniqueId();
       EconomyManager.deposit(playerUUID, 50.0);
+      SelectClass.openClassSelectGUI(player); // Line 601 ( SelectClass.java ) Kicking player after class selection menu is closed.
 
 
     } else {
 
-      playerData.set(Keys.maxMana, PersistentDataType.DOUBLE, 100.0);
-      playerData.set(Keys.manaPerSec, PersistentDataType.DOUBLE, 1.0);
-
-      playerData.set(Keys.level, PersistentDataType.INTEGER, 0);
-      playerData.set(Keys.experience, PersistentDataType.INTEGER, 0);
-
-      playerData.set(Keys.showExp, PersistentDataType.BOOLEAN, true);
+      // Has to be removed in final production \\
       playerData.set(Keys.isPaid, PersistentDataType.BOOLEAN, true);
-
+      EconomyManager.deposit(player.getUniqueId(), 50.0);
       SelectClass.openClassSelectGUI(player);
 
       if (className == null) SelectClass.openClassSelectGUI(player);

@@ -21,8 +21,6 @@ public class MoneyPerKill implements Listener {
     Player player = event.getEntity().getKiller();
     UUID playerUUID = player.getUniqueId();
     int currentLevel = LevelManager.getLevel(player);
-
-    
     
     EconomyManager.deposit(playerUUID, (0.25 * currentLevel) );
 

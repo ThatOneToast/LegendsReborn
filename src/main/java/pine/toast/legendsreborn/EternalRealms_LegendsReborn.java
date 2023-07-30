@@ -28,15 +28,18 @@ public final class EternalRealms_LegendsReborn extends JavaPlugin {
 
   private static EternalRealms_LegendsReborn plugin;
 
+  @SuppressWarnings("ConstantConditions")
   @Override
   public void onEnable() {
     // Plugin startup logic
     ActionBar.initializeMana();
     ArmorEquipEvent.registerListener(this);
     AuctionHouseManager.createAuctionHouseDataManager(this);
+    EconomyManager.createBalancesFile(this);
 
     plugin = this;
 
+    // Player n Server utilities.
     getServer().getPluginManager().registerEvents(new SelectClass(), this);
     getServer().getPluginManager().registerEvents(new FirstJoin(), this);
     getServer().getPluginManager().registerEvents(new MoneyPerKill(), this);
@@ -75,14 +78,11 @@ public final class EternalRealms_LegendsReborn extends JavaPlugin {
     File teamsFile = new File(getDataFolder(), "teams.dat");
     File balanceFile = new File(getDataFolder(), "balances.dat");
 
-
     // Create an instance of TeamManager
     TeamManager teamManager = new TeamManager(teamsFile);
 
     // Create an instance of EconomyManager
     EconomyManager economyManager = new EconomyManager(balanceFile);
-
-    // Create an instance of InventoryManager
 
     // Check if teams.dat file exists
     if (!teamsFile.exists()) {
@@ -97,24 +97,6 @@ public final class EternalRealms_LegendsReborn extends JavaPlugin {
         }
       } catch (IOException e) {
         getLogger().severe("Failed to create teams.dat file!");
-        e.printStackTrace();
-        return;
-      }
-    }
-
-    // Check if balances.dat file exists
-    if (!balanceFile.exists()) {
-      try {
-        boolean balanceFileCreated = balanceFile.createNewFile();
-        if (balanceFileCreated) {
-          getLogger().info("balances.dat file created.");
-          // Perform additional actions for a successful file creation
-        } else {
-          getLogger().severe("Failed to create balances.dat file!");
-          // Perform additional actions for a failed file creation
-        }
-      } catch (IOException e) {
-        getLogger().severe("Failed to create balances.dat file!");
         e.printStackTrace();
         return;
       }

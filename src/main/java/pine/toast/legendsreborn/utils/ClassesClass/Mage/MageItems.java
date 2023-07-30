@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import pine.toast.legendsreborn.utils.ItemManager.ItemManager;
+import pine.toast.legendsreborn.utils.Keys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class MageItems {
                     ChatColor.GRAY + "This tome has the power to freeze your foes.",
                     ChatColor.GRAY + "Cost: 75"
             },
-            enchantments, true, 6);
+            enchantments, true, 6, Keys.ToF);
   }
 
   public static ItemStack AetherWalker() {
@@ -36,7 +37,7 @@ public class MageItems {
                     ChatColor.GRAY + "This wand transports you +10 blocks",
                     ChatColor.GRAY + "Cost: 60 Mana"
             },
-            ench, true, 7);
+            ench, true, 7, Keys.AetherWalker);
   }
 
   public static ItemStack StarFire() {
@@ -48,7 +49,7 @@ public class MageItems {
                     ChatColor.GRAY + "Right click - Lightning Bolt",
                     ChatColor.GRAY + "Mana Cost: 10"
             },
-            ench, true, 3);
+            ench, true, 3, Keys.Starfire);
   }
 
   public static ItemStack WoH() {
@@ -61,7 +62,7 @@ public class MageItems {
                     ChatColor.GRAY + "Explosion Radius: 1",
                     ChatColor.GRAY + "Mana Cost: 50"
             },
-            ench, true, 2);
+            ench, true, 2, Keys.WoH);
   }
 
   public static ItemStack brokenWand() {
@@ -74,7 +75,7 @@ public class MageItems {
                     ChatColor.GRAY + "Damage: +5",
                     ChatColor.GRAY + "Mana Cost: 15"
             },
-            ench, true, 1);
+            ench, true, 1, Keys.BrokenWand);
   }
 
 

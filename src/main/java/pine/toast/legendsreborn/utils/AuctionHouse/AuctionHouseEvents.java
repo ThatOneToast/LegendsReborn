@@ -36,39 +36,38 @@ public class AuctionHouseEvents implements Listener {
       switch (clickedSlot) {
         case 0 -> {
           // Server category
-          Inventory serverCategoryInventory = AuctionHouseManager.createServerCategoryInventory();
+          Inventory serverCategoryInventory = AuctionHouseManager.createCategoryInventory("Server", ChatColor.GOLD, 54);
           player.openInventory(serverCategoryInventory);
         }
         case 2 -> {
           // Blocks category
-          Inventory blocksCategoryInventory = AuctionHouseManager.createBlocksCategoryInventory();
+          Inventory blocksCategoryInventory = AuctionHouseManager.createCategoryInventory("Blocks", ChatColor.BLUE, 54);
           player.openInventory(blocksCategoryInventory);
         }
         case 3 -> {
           // Weapons category
-          Inventory weaponsCategoryInventory = AuctionHouseManager.createWeaponsCategoryInventory();
+          Inventory weaponsCategoryInventory = AuctionHouseManager.createCategoryInventory("Weapons", ChatColor.RED, 54);
           player.openInventory(weaponsCategoryInventory);
         }
         case 4 -> {
           // Tools category
-          Inventory toolsCategoryInventory = AuctionHouseManager.createToolsCategoryInventory();
+          Inventory toolsCategoryInventory = AuctionHouseManager.createCategoryInventory("Tools", ChatColor.YELLOW, 54);
           player.openInventory(toolsCategoryInventory);
         }
         case 5 -> {
           // Armor category
-          Inventory armorCategoryInventory = AuctionHouseManager.createArmorCategoryInventory();
+          Inventory armorCategoryInventory = AuctionHouseManager.createCategoryInventory("Armor", ChatColor.AQUA, 54);
           player.openInventory(armorCategoryInventory);
         }
         case 6 -> {
-          // MISC category
-          Inventory miscCategoryInventory = AuctionHouseManager.createMiscCategoryInventory();
+          // Misc category
+          Inventory miscCategoryInventory = AuctionHouseManager.createCategoryInventory("Misc", ChatColor.LIGHT_PURPLE, 54);
           player.openInventory(miscCategoryInventory);
         }
-        default -> player.sendMessage(ChatColor.RED + "An error has occured. Please contact a dev.");
+        default -> player.sendMessage(ChatColor.RED + "An error has occurred. Please contact a dev.");
       }
 
     }
+
   }
-
-
 }

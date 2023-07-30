@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("ConstantConditions")
 public class AuctionHouseManager {
 
   private static File dataFile;
@@ -180,125 +181,15 @@ public class AuctionHouseManager {
   }
 
 
-  public static Inventory createServerCategoryInventory() {
-    String category = "server";
+  public static Inventory createCategoryInventory(String categoryName, ChatColor color, int size) {
+    String category = categoryName.toLowerCase();
 
     // Load the inventory from the file
     Inventory inventory = loadInventory(category);
 
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
     // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.GOLD + "Server Category");
-
-    // Add items to the inventory if needed
-
-    // Save the inventory to the file
-    saveInventory(category, inventory);
-
-    return inventory;
-  }
-
-  public static Inventory createBlocksCategoryInventory() {
-    String category = "blocks";
-
-    // Load the inventory from the file
-    Inventory inventory = loadInventory(category);
-
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
-    // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Blocks Category");
-
-    // Add items to the inventory if needed
-
-    // Save the inventory to the file
-    saveInventory(category, inventory);
-
-    return inventory;
-  }
-
-  public static Inventory createWeaponsCategoryInventory() {
-    String category = "weapons";
-
-    // Load the inventory from the file
-    Inventory inventory = loadInventory(category);
-
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
-    // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.RED + "Weapons Category");
-
-    // Add items to the inventory if needed
-
-    // Save the inventory to the file
-    saveInventory(category, inventory);
-
-    return inventory;
-  }
-
-  public static Inventory createToolsCategoryInventory() {
-    String category = "tools";
-
-    // Load the inventory from the file
-    Inventory inventory = loadInventory(category);
-
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
-    // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.YELLOW + "Tools Category");
-
-    // Add items to the inventory if needed
-
-    // Save the inventory to the file
-    saveInventory(category, inventory);
-
-    return inventory;
-  }
-
-  public static Inventory createArmorCategoryInventory() {
-    String category = "armor";
-
-    // Load the inventory from the file
-    Inventory inventory = loadInventory(category);
-
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
-    // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.AQUA + "Armor Category");
-
-    // Add items to the inventory if needed
-
-    // Save the inventory to the file
-    saveInventory(category, inventory);
-
-    return inventory;
-  }
-
-  public static Inventory createMiscCategoryInventory() {
-    String category = "misc";
-
-    // Load the inventory from the file
-    Inventory inventory = loadInventory(category);
-
-    if (inventory != null) {
-      return inventory; // Inventory exists in the file, return the loaded inventory
-    }
-
-    // Inventory doesn't exist in the file, create a new one
-    inventory = Bukkit.createInventory(null, 54, ChatColor.LIGHT_PURPLE + "MISC Category");
-
-    // Add items to the inventory if needed
+    String title = color + categoryName + " Category";
+    inventory = Bukkit.createInventory(null, size, title);
 
     // Save the inventory to the file
     saveInventory(category, inventory);

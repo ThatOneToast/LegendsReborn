@@ -9,11 +9,8 @@ public class Items implements Listener {
   
   @EventHandler
   public void onItemBurnOrExplode(EntityDamageEvent event) {
-    
     if(!(event.getEntity() instanceof Item item)) return;
-    
     event.setCancelled(true);
-    
   }
   
   
