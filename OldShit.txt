@@ -1,0 +1,68 @@
+
+
+@EventHandler
+  public void onDeathsReaperUse(PlayerInteractEvent event) {
+    ItemStack mainHandItem = event.getPlayer().getInventory().getItemInMainHand();
+
+    if (mainHandItem.getType() == Material.AIR) {
+      return;
+    }
+
+    if (!(event.getPlayer().getInventory().getItemInMainHand().isSimilar()))
+      return;
+
+    Player player = event.getPlayer();
+    String playerClass = player.getPersistentDataContainer().get(Keys.selectedClass, PersistentDataType.STRING);
+    double playerMana = ManaManager.getMana(player);
+
+    // Check if the player's class is one of the allowed classes
+    if (!playerClass.equals("Necromancer")) {
+      return;
+    }
+
+    if (!(playerMana >= 75)) {
+      player.sendMessage(ChatColor.RED + "Not enough mana!");
+      return;
+    }
+
+
+    if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+      Vector playerDirection = player.getEyeLocation().getDirection();
+
+      // Calculate the position 3 blocks in front of the player
+      double distance = 3.0;
+      Location targetLocation = player.getEyeLocation().add(playerDirection.multiply(distance));
+
+      // Get all players within 3 blocks in front of the player
+      double radius = 3.0;
+      List<Player> nearbyEntities = new ArrayList<>();
+      for (Entity nearbyPlayer : player.getWorld().getNearbyEntities(targetLocation, radius, radius, radius)) {
+        Vector nearbyPlayerDirection = nearbyPlayer.getLocation().subtract(player.getLocation()).toVector();
+        if (playerDirection.angle(nearbyPlayerDirection) < Math.PI / 2) {
+          if (!(nearbyPlayer instanceof Player)) return;
+          nearbyEntities.add((Player) nearbyPlayer);
+        }
+      }
+
+      for (Player nearbyPlayer : nearbyEntities) {
+        // Exclude the player using the item from the list
+        if (nearbyPlayer.equals(player)) {
+          player.setHealth(player.getHealth() + 50);
+          continue; // Skip further actions for the player using the item
+        }
+
+        String playerTeam = TeamManager.getPlayerTeam(player.getUniqueId());
+        String nearbyPlayerTeam = TeamManager.getPlayerTeam(nearbyPlayer.getUniqueId());
+
+        if (playerTeam.equals(nearbyPlayerTeam)) {
+          // The player and the nearby player are on the same team
+          continue; // Skip further actions for the nearby player
+        }
+
+        nearbyPlayer.damage(10);
+        nearbyPlayer.sendMessage(ChatColor.GOLD + player.getDisplayName() + ChatColor.RED + " has used Death Reaper!");
+      }
+
+    }
+  }
+
