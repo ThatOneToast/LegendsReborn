@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import pine.toast.legendsreborn.utils.ItemManager.ItemManager;
+import pine.toast.legendsreborn.utils.Keys;
 
 import java.util.Map;
 
@@ -21,10 +22,9 @@ public class BarbarianItems {
                     ChatColor.GRAY + "Damage: +10",
                     ChatColor.GRAY + "Mana Cost: 20"
             },
-            enchantments, false, 5);
+            enchantments, false, 5, Keys.DoubleAxe);
 
-    
-    
+
     return doubleAxe;
 
   }

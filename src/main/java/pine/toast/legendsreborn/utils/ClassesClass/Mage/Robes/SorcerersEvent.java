@@ -13,8 +13,6 @@ import pine.toast.mana.ManaManager;
 
 public class SorcerersEvent implements Listener {
 
-  // TODO: THESE METHODS ARE NEVER BEING CALLED ---- MUST FIX!!!!! 
-
   @EventHandler
   public void onEmbraceEquip(ArmorEquipEvent event) {
     if (event.getNewArmorPiece() == null) return;
@@ -29,15 +27,10 @@ public class SorcerersEvent implements Listener {
       return;
     }
 
-
     Player player = event.getPlayer();
-    PersistentDataContainer playerData = player.getPersistentDataContainer();
 
     double addedMana = data.get(Keys.embrace, PersistentDataType.DOUBLE);
     double currentMana = ManaManager.getMaxMana(player);
-
-
-    event.getPlayer().sendMessage("GOOD HERE 2");
 
     ManaManager.setMaxMana(player, currentMana + addedMana);
   }
@@ -56,16 +49,10 @@ public class SorcerersEvent implements Listener {
     }
 
     Player player = event.getPlayer();
-    PersistentDataContainer playerData = player.getPersistentDataContainer();
-
 
     double currentMana = ManaManager.getMaxMana(player);
     double addedMana = data.get(Keys.embrace, PersistentDataType.DOUBLE);
 
-    player.sendMessage("CurrentMana: " + currentMana);
-    player.sendMessage("New Mana: " + addedMana);
-
-    event.getPlayer().sendMessage("GOOD HERE 4");
     ManaManager.setMaxMana(player, currentMana - addedMana);
   }
 

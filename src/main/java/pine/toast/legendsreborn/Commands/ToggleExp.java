@@ -13,22 +13,14 @@ import pine.toast.legendsreborn.utils.Keys;
 public class ToggleExp implements CommandExecutor {
   @Override
   public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
-
     if (!(sender instanceof Player)) sender.sendMessage(ChatColor.RED + "You must be a player to use this command!");
 
     Player player = (Player) sender;
-
     PersistentDataContainer container = player.getPersistentDataContainer();
-
     boolean toggle = container.get(Keys.isPaid, PersistentDataType.BOOLEAN);
 
-    if (toggle) {
-      container.set(Keys.showExp, PersistentDataType.BOOLEAN, false);
-      player.sendMessage(ChatColor.GRAY + "You have toggled off your experience bar!");
-    } else {
-      container.set(Keys.showExp, PersistentDataType.BOOLEAN, true);
-      player.sendMessage(ChatColor.GRAY + "You have toggled on your experience bar!");
-    }
+    container.set(Keys.showExp, PersistentDataType.BOOLEAN, !toggle);
+    player.sendMessage(ChatColor.GRAY + " You have toggled your experience bar to " + !toggle);
 
     return true;
   }
